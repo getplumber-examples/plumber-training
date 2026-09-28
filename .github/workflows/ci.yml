@@ -1,4 +1,3 @@
-# Formation Plumber : ce workflow contient VOLONTAIREMENT des mauvaises pratiques.
 name: CI
 
 on:
@@ -6,29 +5,22 @@ on:
     branches: [main]
   pull_request:
 
-# Pas de bloc "permissions" : le GITHUB_TOKEN garde les droits par défaut
-
 jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      # Logs de debug : tout ce qui transite par le runner apparaît dans les logs
       ACTIONS_STEP_DEBUG: true
     steps:
-      # Tag mutable, et le token reste écrit dans .git/config (persist-credentials)
       - uses: actions/checkout@v4
 
-      # Référence sur une branche : le code exécuté peut changer à tout moment
       - uses: actions/setup-node@main
         with:
           node-version: 22
 
-      # Action tierce sur un tag mutable, dans une version touchée par une CVE connue
       - name: Changed files
         id: changed
         uses: tj-actions/changed-files@v45
 
-      # Script distant exécuté sans vérification d'intégrité
       - name: Install tooling
         run: curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
 
@@ -37,7 +29,6 @@ jobs:
           echo "Build de boutique-api"
           node --version
 
-      # Le titre de la PR est contrôlé par son auteur et injecté dans le shell
       - name: Log PR title
         if: github.event_name == 'pull_request'
         run: echo "PR title = ${{ github.event.pull_request.title }}"
