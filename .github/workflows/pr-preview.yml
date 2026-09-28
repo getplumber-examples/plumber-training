@@ -1,20 +1,15 @@
-# Formation Plumber : ce workflow contient VOLONTAIREMENT des mauvaises pratiques.
 name: PR preview
 
-# pull_request_target s'exécute avec les secrets et un token en écriture,
-# même pour une PR venant d'un fork
 on:
   pull_request_target:
     types: [opened, synchronize]
 
-# Tous les droits en écriture
 permissions: write-all
 
 jobs:
   preview:
     runs-on: ubuntu-latest
     steps:
-      # Récupère le code de l'auteur de la PR dans un contexte privilégié
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
